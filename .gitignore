@@ -1,0 +1,14 @@
+# ambiente virtual
+.venv/
+venv/
+
+# variáveis de ambiente
+.env
+discord.log
+
+# cache python
+__pycache__/
+*.pyc
+
+# arquivos de sistema
+.DS_Store
