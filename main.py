@@ -6,6 +6,11 @@ import logging
 from dotenv import load_dotenv
 import os
 from collections import deque
+import subprocess
+import sys
+
+subprocess.run(["apt-get", "update"], check=True)
+subprocess.run(["apt-get", "install", "-y", "ffmpeg"], check=True)
 
 # ── Config ────────────────────────────────────────────────────────────────────
 load_dotenv()
