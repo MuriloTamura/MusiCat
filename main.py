@@ -292,6 +292,30 @@ async def help_bot(ctx: commands.Context):
         embed.add_field(name=cmd, value=desc, inline=False)
     await ctx.send(embed=embed)
 
+@bot.event
+async def on_voice_state_update(member, before, after):
+    vc = member.guild.voice_client
+    if vc is None:
+        return
+
+    # Verifica se o bot ficou sozinho no canal
+    if len(vc.channel.members) == 1:  # só o bot
+        await asyncio.sleep(60)  # aguarda 60 segundos
+
+        # Verifica de novo depois do tempo
+        if len(vc.channel.members) == 1:
+            state = get_state(member.guild.id)
+            state["queue"].clear()
+            state["current"] = None
+            await vc.disconnect()
+
+            # Avisa no canal de texto
+            channel = before.channel or after.channel
+            for text_channel in member.guild.text_channels:
+                if text_channel.permissions_for(member.guild.me).send_messages:
+                    await text_channel.send("👋 Saí do canal por inatividade.")
+                    break
+
 # ── Error handler ─────────────────────────────────────────────────────────────
 @bot.event
 async def on_command_error(ctx: commands.Context, error):
